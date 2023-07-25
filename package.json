@@ -4,19 +4,30 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "tsx watch ./src/main.ts"
+  },
+  "engines": {
+    "node": "20"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.3",
+    "@types/multer": "^1.4.7",
+    "@types/supertest": "^2.0.12",
+    "jest": "^29.6.1",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
     "tsx": "^3.12.7",
     "typescript": "^5.1.6"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "mongoose": "^7.4.1"
+    "mongoose": "^7.4.1",
+    "multer": "^1.4.5-lts.1"
   }
 }
