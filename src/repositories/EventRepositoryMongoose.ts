@@ -45,6 +45,11 @@ class EventRepositoryMongoose implements EventRepository {
 
     return findEvent ? findEvent.toObject() : undefined;
   }
+  async findEventById(id: string): Promise<Event | undefined> {
+    const findEvent = await EventModel.findOne({ _id: id }).exec();
+
+    return findEvent ? findEvent.toObject() : undefined;
+  }
   async findEventsByCity(city: string): Promise<Event[]> {
     const findEvent = await EventModel.find({ city }).exec();
 
@@ -52,10 +57,24 @@ class EventRepositoryMongoose implements EventRepository {
   }
   async findEventsByCategory(category: string): Promise<Event[]> {
     const findEvent = await EventModel.find({ categories: category }).exec();
+
+    return findEvent.map((event) => event.toObject());
+  }
+  async update(event: Event, id: string): Promise<any> {
+    const eventUpdate = await EventModel.updateMany({ _id: id }, event);
     console.log(
-      '🚀 ~ file: EventRepositoryMongoose.ts:55 ~ EventRepositoryMongoose ~ findEventsByCategory ~ findEvent:',
-      findEvent,
+      '🚀 ~ file: EventRepositoryMongoose.ts:65 ~ EventRepositoryMongoose ~ update ~ eventUpdate:',
+      eventUpdate,
     );
+    return event;
+  }
+  async findEventsByName(name: string): Promise<Event[]> {
+    const findEvent = await EventModel.find({
+      title: {
+        $regex: name,
+        $options: 'i',
+      },
+    }).exec();
 
     return findEvent.map((event) => event.toObject());
   }
