@@ -30,7 +30,8 @@ class EventUseCase {
     );
     eventData = {
       ...eventData,
-      city: cityName,
+      city: cityName.cityName,
+      formattedAddress: cityName.formattedAddress,
     };
 
     const result = await this.eventRepository.add(eventData);
@@ -41,7 +42,7 @@ class EventUseCase {
     const cityName = await this.getCityNameByCoordinates(latitude, longitude);
 
     const findEventsByCity = await this.eventRepository.findEventsByCity(
-      cityName,
+      cityName.cityName,
     );
 
     const eventWithRadius = findEventsByCity.filter((event) => {
@@ -59,6 +60,29 @@ class EventUseCase {
   async findEventsByCategory(category: string) {
     if (!category) throw new HttpException(400, 'Category is required');
     const events = await this.eventRepository.findEventsByCategory(category);
+
+    return events;
+  }
+  async filterEvents(
+    latitude: number,
+    longitude: number,
+    name: string,
+    date: Date,
+    category: string,
+    radius: string,
+    price: string,
+  ) {
+    const events = await this.eventRepository.findEventsByFilter(
+      name,
+      date,
+      category,
+      price,
+    );
+
+    return events;
+  }
+  async findEventsMain() {
+    const events = await this.eventRepository.findEventsMain(new Date());
 
     return events;
   }
@@ -117,8 +141,12 @@ class EventUseCase {
             type.types.includes('administrative_area_level_2') &&
             type.types.includes('political'),
         );
+        const formattedAddress = response.data.results[0].formatted_address;
 
-        return cityType.long_name;
+        return {
+          cityName: cityType.long_name,
+          formattedAddress,
+        };
       }
       throw new HttpException(404, 'City not found');
     } catch (error) {
