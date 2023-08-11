@@ -3,7 +3,15 @@ import { Event } from '../entities/Event';
 import { HttpException } from '../interfaces/HttpException';
 import { EventRepository } from '../repositories/EventRepository';
 import { UserRepositoryMongoose } from '../repositories/UserRepositoryMongoose';
-
+export interface IFilterProps {
+  latitude: number;
+  longitude: number;
+  name: string;
+  date: string;
+  category: string;
+  radius: number;
+  price: number;
+}
 class EventUseCase {
   constructor(private eventRepository: EventRepository) {}
 
@@ -52,7 +60,7 @@ class EventUseCase {
         Number(event.location.latitude),
         Number(event.location.longitude),
       );
-      return distance <= 3;
+      return distance <= 100;
     });
 
     return eventWithRadius;
@@ -63,21 +71,24 @@ class EventUseCase {
 
     return events;
   }
-  async filterEvents(
-    latitude: number,
-    longitude: number,
-    name: string,
-    date: Date,
-    category: string,
-    radius: string,
-    price: string,
-  ) {
-    const events = await this.eventRepository.findEventsByFilter(
+  async filterEvents({
+    latitude,
+    longitude,
+    name,
+    date,
+    category,
+    radius,
+    price,
+  }: IFilterProps) {
+    const events = await this.eventRepository.findEventsByFilter({
+      latitude,
+      longitude,
       name,
       date,
       category,
+      radius,
       price,
-    );
+    });
 
     return events;
   }

@@ -6,6 +6,10 @@ class EventController {
   constructor(private eventUseCase: EventUseCase) {}
   async create(request: Request, response: Response, next: NextFunction) {
     let eventData: Event = request.body;
+    console.log(
+      '🚀 ~ file: EventController.ts:9 ~ EventController ~ create ~ eventData:',
+      eventData,
+    );
 
     const files = request.files as any;
 
@@ -49,16 +53,15 @@ class EventController {
     const { latitude, longitude, name, date, category, radius, price } =
       request.query;
     try {
-      const events = await this.eventUseCase.filterEvents(
-        Number(latitude),
-        Number(longitude),
-
-        String(name),
-        date,
-        category,
-        radius,
-        price,
-      );
+      const events = await this.eventUseCase.filterEvents({
+        latitude: Number(latitude),
+        longitude: Number(longitude),
+        name: String(name),
+        date: String(date),
+        category: String(category),
+        radius: Number(radius),
+        price: Number(price),
+      });
       return response.status(200).json(events);
     } catch (error) {
       next(error);
