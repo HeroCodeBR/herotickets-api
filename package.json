@@ -8,7 +8,7 @@
     "dev": "tsx watch ./src/main.ts"
   },
   "engines": {
-    "node": "20"
+    "node": "16"
   },
   "keywords": [],
   "author": "",
